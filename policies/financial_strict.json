@@ -1,0 +1,50 @@
+{
+  "constraints": [
+    {
+      "id": "ltv_limit_strict",
+      "type": "ratio_max",
+      "numerator": "loan_amount",
+      "denominator": "property_value",
+      "max": 0.7,
+      "severity": "critical",
+      "description": "Strict LTV: <= 70%"
+    },
+    {
+      "id": "dsr_limit_strict",
+      "type": "ratio_max",
+      "numerator": "monthly_debt",
+      "denominator": "monthly_income",
+      "max": 0.3,
+      "severity": "critical",
+      "description": "Strict DSR: <= 30%"
+    },
+    {
+      "id": "var_limit_strict",
+      "type": "lte_field",
+      "field": "marginal_var",
+      "other_field": "var_limit",
+      "other_default": 0.9,
+      "severity": "critical",
+      "description": "Strict VaR limit"
+    },
+    {
+      "id": "min_income",
+      "type": "value_min",
+      "field": "monthly_income",
+      "min": 2500,
+      "severity": "high",
+      "description": "Borrower must earn >= 2.5k per month"
+    },
+    {
+      "id": "positive_amounts",
+      "type": "positive",
+      "fields": [
+        "loan_amount",
+        "property_value",
+        "monthly_income"
+      ],
+      "severity": "critical",
+      "description": "All amounts must be positive"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "aggregate_rules": [
+    {
+      "id": "approval_span",
+      "type": "max_approval_span",
+      "max": 0.15,
+      "min_group_size": 50,
+      "severity": "high",
+      "description": "Final approval rates must not differ by more than 15 points across segments"
+    },
+    {
+      "id": "four_fifths",
+      "type": "min_approval_ratio",
+      "min": 0.8,
+      "min_group_size": 50,
+      "severity": "critical",
+      "description": "The least-approved segment must reach 80% of the most-approved rate"
+    },
+    {
+      "id": "override_gap",
+      "type": "max_override_rate_gap",
+      "max": 0.1,
+      "min_group_size": 50,
+      "severity": "high",
+      "description": "Policy must not reverse approvals at very different rates by segment"
+    },
+    {
+      "id": "drift_rate",
+      "type": "max_anomaly_rate",
+      "max": 0.05,
+      "severity": "medium",
+      "description": "No more than 5% of decisions may carry a drift alert"
+    },
+    {
+      "id": "violation_rate",
+      "type": "max_violation_rate",
+      "max": 0.25,
+      "severity": "medium",
+      "description": "No more than 25% of decisions may breach a policy constraint"
+    },
+    {
+      "id": "unevaluated_rate",
+      "type": "max_degraded_rate",
+      "max": 0.01,
+      "severity": "high",
+      "description": "No more than 1% of decisions may be logged as degraded"
+    }
+  ]
+}

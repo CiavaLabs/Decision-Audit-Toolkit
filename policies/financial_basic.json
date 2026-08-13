@@ -1,0 +1,42 @@
+{
+  "constraints": [
+    {
+      "id": "ltv_limit",
+      "type": "ratio_max",
+      "numerator": "loan_amount",
+      "denominator": "property_value",
+      "max": 0.8,
+      "severity": "high",
+      "description": "Loan-to-value ratio must be <= 80%"
+    },
+    {
+      "id": "dsr_limit",
+      "type": "ratio_max",
+      "numerator": "monthly_debt",
+      "denominator": "monthly_income",
+      "max": 0.35,
+      "severity": "high",
+      "description": "Debt service ratio must be <= 35%"
+    },
+    {
+      "id": "var_limit",
+      "type": "lte_field",
+      "field": "marginal_var",
+      "other_field": "var_limit",
+      "other_default": 1.0,
+      "severity": "critical",
+      "description": "VaR must be within limit"
+    },
+    {
+      "id": "positive_amounts",
+      "type": "positive",
+      "fields": [
+        "loan_amount",
+        "property_value",
+        "monthly_income"
+      ],
+      "severity": "critical",
+      "description": "All amounts must be positive"
+    }
+  ]
+}

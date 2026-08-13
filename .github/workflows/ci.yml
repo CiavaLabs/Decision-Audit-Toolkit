@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  suite:
+    name: Tests and packaging
+    if: github.repository == 'CiavaLabs/Decision-Audit-Toolkit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.12', '3.14']
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+
+      - run: python -m unittest discover -s tests -v
+
+      - name: The wheel builds, installs and runs
+        run: |
+          pip install build
+          python -m build
+          pip install dist/*.whl
+          decision-audit --version
+          decision-audit --state-dir "$RUNNER_TEMP/ci_state" verify
+
+  native-crypto:
+    name: Ed25519 backends agree
+    if: github.repository == 'CiavaLabs/Decision-Audit-Toolkit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install cryptography pynacl
+      - run: python -m unittest discover -s tests -v
+
+      - name: Each backend must also pass on its own
+        run: |
+          for backend in python cryptography pynacl; do
+            echo "== $backend =="
+            DECISION_AUDIT_ED25519_BACKEND=$backend python -m unittest discover -s tests
+          done

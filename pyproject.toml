@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decision-audit"
+description = "Dependency-free toolkit for auditing automated decisions: policy checks, tamper-evident logging, drift and fairness monitoring."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Mario Ciavarella" }]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = ["ruff", "mypy", "coverage", "build"]
+
+[project.scripts]
+decision-audit = "decision_audit.cli:main"
+
+[tool.setuptools]
+packages = ["decision_audit"]
+
+[tool.setuptools.package-data]
+decision_audit = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = { attr = "decision_audit.__version__" }
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "C4", "RUF"]
+ignore = ["E501", "SIM108"]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["decision_audit"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+
+[tool.coverage.run]
+source = ["decision_audit"]
+parallel = true
+
+[tool.coverage.report]
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]
